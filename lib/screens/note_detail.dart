@@ -8,13 +8,14 @@ import '../models/note.dart';
 
 class NoteDetail extends StatefulWidget {
   final String appBarTitle;
+  final String deleteButtonTitle;
   final Note note;
 
-  NoteDetail(this.note, this.appBarTitle);
+  NoteDetail(this.note, this.appBarTitle, this.deleteButtonTitle);
 
   @override
   State<StatefulWidget> createState() {
-    return NoteDetailState(this.note, this.appBarTitle);
+    return NoteDetailState(this.note, this.appBarTitle, this.deleteButtonTitle);
   }
 }
 
@@ -27,12 +28,14 @@ class NoteDetailState extends State<NoteDetail> {
   DatabaseHelper helper = DatabaseHelper();
 
   String appBarTitle;
+  String deleteButtonTitle;
+  Color deleteButtonColor;
   Note note;
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
-  NoteDetailState(this.note, this.appBarTitle);
+  NoteDetailState(this.note, this.appBarTitle, this.deleteButtonTitle);
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,8 @@ class NoteDetailState extends State<NoteDetail> {
 
     titleController.text = note.title;
     descriptionController.text = note.description;
+
+    deleteButtonColor = deleteButtonTitle == 'Delete' ? Colors.red : Colors.blueGrey;
 
     return WillPopScope(
         onWillPop: () {
@@ -164,10 +169,10 @@ class NoteDetailState extends State<NoteDetail> {
                         ),
                         Expanded(
                           child: RaisedButton(
-                            color: Colors.red,
+                            color: deleteButtonColor,
                             textColor: Colors.white,
                             child: Text(
-                              'Delete',
+                              deleteButtonTitle,
                               textScaleFactor: 1.5,
                             ),
                             onPressed: () {
@@ -257,7 +262,7 @@ class NoteDetailState extends State<NoteDetail> {
     // Case 1: If user is trying to delete the NEW NOTE i.e. he has come to
     // the detail page by pressing the FAB of NoteList page.
     if (note.id == null) {
-      _showAlertDialog('Status', 'No Note was deleted');
+      // _showAlertDialog('Status', 'No Note was deleted');
       return;
     }
 
